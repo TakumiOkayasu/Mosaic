@@ -1,6 +1,5 @@
 package com.example.mosaic;
 
-import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -25,6 +24,7 @@ import org.opencv.core.Rect;
 
 public class MainActivity extends AppCompatActivity
 {
+	private static final int CROP_SIZE = 100;
 	private final BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback( this )
 	{
 		@Override
@@ -38,7 +38,6 @@ public class MainActivity extends AppCompatActivity
 			}
 		}
 	};
-	private static final int CROP_SIZE = 100;
 	private TextView mosaicLevelText;
 	private SeekBar mosaicLevel;
 	private Uri imageUri;
@@ -131,25 +130,23 @@ public class MainActivity extends AppCompatActivity
 			public void onStopTrackingTouch( SeekBar seekBar ) {}
 		} );
 
-		// Image Pickerで選択した画像を読み込む
+		// PhotoPickerで選択した画像を読み込む
 		var pickMedia = registerForActivityResult( new ActivityResultContracts.PickVisualMedia(), uri ->
 		{
 			// 選択された後の処理
 			if( uri != null ) {
 				imageUri = uri;
 				selectedImage.setImageURI( imageUri );
-				previewImage.setImageBitmap(
-						Bitmap.createBitmap( ( ( BitmapDrawable ) ( selectedImage.getDrawable() ) ).getBitmap(), 0, 0, CROP_SIZE, CROP_SIZE )
-				);
+				setTouchArea( 0, 0 );
 			}
 			else {
 				// 画像が選択されなければアプリを終了させる
 				new AlertDialog
-					.Builder( this )
-					.setTitle( "お知らせ" )
-					.setMessage( "画像が選択されなかったので終了します。" )
-					.setPositiveButton( "はい", ( dialog, which ) -> finish()
-				).show();
+						    .Builder( this )
+						.setTitle( "お知らせ" )
+						.setMessage( "画像が選択されなかったので終了します。" )
+						.setPositiveButton( "はい", ( dialog, which ) -> finish()
+						).show();
 			}
 		} );
 
@@ -158,6 +155,21 @@ public class MainActivity extends AppCompatActivity
 		// PhotoPickerを使う。ここに謎の型変換エラーが出るが、問題なく動く。
 		var type = ( ActivityResultContracts.PickVisualMedia.VisualMediaType ) ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE;
 		pickMedia.launch( new PickVisualMediaRequest.Builder().setMediaType( type ).build() );
+
+		// 画像内のタッチイベント
+		findViewById( R.id.iv_selected_img ).setOnTouchListener( ( v, event ) ->
+		{
+			// 呼ばないとアノテーションつけろってうるさい
+			v.performClick();
+
+			int x = ( int ) event.getX();
+			int y = ( int ) event.getY();
+
+			Log.d( "AppDebug", String.format( "( x, y )=( %d, %d )", x, y ) );
+
+			setTouchArea( x, y );
+			return true;
+		} );
 
 		Toast.makeText( this, "画像を選択してください。", Toast.LENGTH_SHORT ).show();
 	}
