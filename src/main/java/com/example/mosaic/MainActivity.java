@@ -2,18 +2,12 @@ package com.example.mosaic;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
 import android.graphics.Point;
-import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -59,7 +53,7 @@ public class MainActivity extends AppCompatActivity
 		mosaicLevelText = findViewById( R.id.tv_mosaic_level );
 		mosaicLevel = findViewById( R.id.sb_mosaic_level );
 		selectedImage = findViewById( R.id.tiv_selected_img );
-		previewImage = findViewById( R.id.iv_preview );
+		previewImage = findViewById( R.id.pr_preview );
 
 		showMosaicLevel();
 
@@ -113,6 +107,7 @@ public class MainActivity extends AppCompatActivity
 
 			var size = getDisplaySize( this );
 
+			// TODO 画面サイズー＞画像サイズに対応するメソッドを作成する
 			int x = Math.max( 0, Math.min( ( int ) event.getX(), size.x ) );
 			int y = Math.max( 0, Math.min( ( int ) event.getY(), size.y ) );
 
@@ -159,7 +154,7 @@ public class MainActivity extends AppCompatActivity
 		);
 	}
 
-	public Point getDisplaySize( Activity activity )
+	private Point getDisplaySize( Activity activity )
 	{
 		var windowMetrics = activity.getWindowManager().getCurrentWindowMetrics();
 		var h = windowMetrics.getBounds().height();
@@ -167,4 +162,5 @@ public class MainActivity extends AppCompatActivity
 
 		return new Point( w, h );
 	}
+
 }

@@ -5,23 +5,37 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.util.AttributeSet;
 import android.view.View;
 
 public class PreviewRect extends View
 {
-	private static final Rect PREVIEW_RECT = new Rect( 0, 0, 100, 100 );
-	private final Paint paint;
+	private static final float STROKE_WIDTH = 20.f;
+	private final Rect rect = new Rect( 10, 10, 250, 250 );
+	private final Paint paint = new Paint();
 
 	public PreviewRect( Context context )
 	{
 		super( context );
-		this.paint = new Paint();
+	}
+
+	public PreviewRect( Context context, AttributeSet attrs )
+	{
+		super( context, attrs );
+	}
+
+	public PreviewRect( Context context, AttributeSet attrs, int defStyleAttr )
+	{
+		super( context, attrs, defStyleAttr );
 	}
 
 	@Override
 	protected void onDraw( Canvas canvas )
 	{
 		paint.setColor( Color.RED );
-		canvas.drawRect( PREVIEW_RECT, paint );
+		paint.setStrokeWidth( STROKE_WIDTH );
+		paint.setStyle( Paint.Style.STROKE );
+
+		canvas.drawRect( rect, paint );
 	}
 }

@@ -30,21 +30,19 @@
 
     <com.ortiz.touchview.TouchImageView
         android:id="@+id/tiv_selected_img"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@+id/sb_mosaic_level"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_preview" />
 
-    <ImageView
-        android:id="@+id/iv_preview"
+    <com.example.mosaic.PreviewRect
+        android:id="@+id/pr_preview"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:baseline="@dimen/cardview_compat_inset_shadow"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="ContentDescription" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/tv_preview"
@@ -52,9 +50,9 @@
         android:layout_height="wrap_content"
         android:keyboardNavigationCluster="true"
         android:text="加工前"
-        app:layout_constraintEnd_toEndOf="@+id/iv_preview"
-        app:layout_constraintStart_toStartOf="@+id/iv_preview"
-        app:layout_constraintTop_toBottomOf="@+id/iv_preview"
+        app:layout_constraintEnd_toEndOf="@+id/pr_preview"
+        app:layout_constraintStart_toStartOf="@+id/pr_preview"
+        app:layout_constraintTop_toBottomOf="@+id/pr_preview"
         tools:ignore="HardcodedText,MissingConstraints" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
