@@ -2,12 +2,18 @@ package com.example.mosaic;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.Point;
+import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -22,13 +28,9 @@ import com.ortiz.touchview.TouchImageView;
 import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.LoaderCallbackInterface;
 import org.opencv.android.OpenCVLoader;
-import org.opencv.core.Mat;
-import org.opencv.core.MatOfRect;
-import org.opencv.core.Rect;
 
 public class MainActivity extends AppCompatActivity
 {
-	private static final int CROP_SIZE = 100;
 	private final BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback( this )
 	{
 		@Override
@@ -47,64 +49,6 @@ public class MainActivity extends AppCompatActivity
 	private Uri imageUri;
 	private TouchImageView selectedImage;
 	private ImageView previewImage;
-
-	/**
-	 * ROIを指定してモザイク処理
-	 *
-	 * @param image      元画像となる {@link Mat}
-	 * @param rectangles モザイク対象のROIを指定した {@link MatOfRect}
-	 * @param size       モザイクのピクセル幅
-	 * @return モザイク処理後の {@link Mat}
-	 */
-	public static Mat drawMosaic( Mat image, MatOfRect rectangles, int size )
-	{
-		Mat dstImage = image.clone();
-		for( Rect rect : rectangles.toArray() ) {
-			Mat imageROI = new Mat( image, rect );
-			Mat dstImageROI = new Mat( dstImage, rect );
-
-			for( int y = 0 ; y < imageROI.height() ; y += size ) {
-				for( int x = 0 ; x < imageROI.width() ; x += size ) {
-					int yLimit = y + size;
-
-					if( yLimit >= imageROI.height() ) {
-						yLimit = imageROI.height();
-					}
-
-					int xLimit = x + size;
-
-					if( xLimit >= imageROI.width() ) {
-						xLimit = imageROI.width();
-					}
-
-					double b = 0., g = 0., r = 0.;
-					int winSize = 0;
-
-					for( int i = y ; i < yLimit ; i++ ) {
-						for( int j = x ; j < xLimit ; j++ ) {
-							double[] pixel = imageROI.get( j, i );
-							b += pixel[ 0 ];
-							g += pixel[ 1 ];
-							r += pixel[ 2 ];
-							winSize++;
-						}
-					}
-
-					b /= winSize;
-					g /= winSize;
-					r /= winSize;
-
-					for( int i = y ; i < yLimit ; i++ ) {
-						for( int j = x ; j < xLimit ; j++ ) {
-							dstImageROI.put( j, i, b, g, r );
-						}
-					}
-				}
-			}
-		}
-
-		return dstImage;
-	}
 
 	@Override
 	protected void onCreate( Bundle savedInstanceState )
@@ -141,7 +85,7 @@ public class MainActivity extends AppCompatActivity
 			if( uri != null ) {
 				imageUri = uri;
 				selectedImage.setImageURI( imageUri );
-				setTouchArea( 0, 0 );
+				setPreview( 0, 0 );
 				Log.d( "AppDebug", String.format( "imgSize = ( %d, %d )", selectedImage.getWidth(), selectedImage.getWidth() ) );
 			}
 			else {
@@ -150,8 +94,8 @@ public class MainActivity extends AppCompatActivity
 						    .Builder( this )
 						.setTitle( "お知らせ" )
 						.setMessage( "画像が選択されなかったので終了します。" )
-						.setPositiveButton( "はい", ( dialog, which ) -> finish()
-						).show();
+						.setPositiveButton( "はい", ( dialog, which ) -> finish() )
+						.show();
 			}
 		} );
 
@@ -167,16 +111,14 @@ public class MainActivity extends AppCompatActivity
 			// 呼ばないとアノテーションつけろってうるさい
 			v.performClick();
 
-			int x = ( int ) event.getX();
-			int y = ( int ) event.getY();
 			var size = getDisplaySize( this );
 
-			x = Math.max( 0, Math.min( x, size.x ) );
-			y = Math.max( 0, Math.min( y, size.y ) );
+			int x = Math.max( 0, Math.min( ( int ) event.getX(), size.x ) );
+			int y = Math.max( 0, Math.min( ( int ) event.getY(), size.y ) );
 
-			Log.d( "AppDebug", String.format( "( x, y )=( %d, %d )", x, y ) );
+			Log.i( "AppDebug", String.format( "( x, y ) = ( %d, %d )", x, y ) );
 
-			setTouchArea( x, y );
+			setPreview( x, y );
 			return true;
 		} );
 
@@ -204,12 +146,13 @@ public class MainActivity extends AppCompatActivity
 		mosaicLevelText.setText( String.format( "%s×%s", v, v ) );
 	}
 
-	private void setTouchArea( int x, int y )
+	private void setPreview( int x, int y )
 	{
 		var size = getDisplaySize( this );
 
-		x = Math.max( 0, Math.min( x, size.x ) );
-		y = Math.max( 0, Math.min( y, size.y ) );
+		x = Math.max( 0, Math.min( x + 100, size.x ) );
+		y = Math.max( 0, Math.min( y - 100, size.y ) );
+		final int CROP_SIZE = 500;
 
 		previewImage.setImageBitmap(
 				Bitmap.createBitmap( ( ( BitmapDrawable ) selectedImage.getDrawable() ).getBitmap(), x, y, CROP_SIZE, CROP_SIZE )
