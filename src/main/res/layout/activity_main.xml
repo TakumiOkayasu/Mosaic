@@ -30,9 +30,9 @@
 
     <ImageView
         android:id="@+id/iv_selected_img"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="32dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:scaleType="fitCenter"
         app:layout_constraintBottom_toTopOf="@+id/sb_mosaic_level"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

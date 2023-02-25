@@ -1,11 +1,14 @@
 package com.example.mosaic;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.graphics.Bitmap;
+import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.ScaleGestureDetector;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -13,6 +16,7 @@ import android.widget.Toast;
 
 import androidx.activity.result.PickVisualMediaRequest;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import org.opencv.android.BaseLoaderCallback;
@@ -43,6 +47,7 @@ public class MainActivity extends AppCompatActivity
 	private Uri imageUri;
 	private ImageView selectedImage;
 	private ImageView previewImage;
+	private ScaleGestureDetector gestureDetector;
 
 	/**
 	 * ROIを指定してモザイク処理
@@ -112,6 +117,22 @@ public class MainActivity extends AppCompatActivity
 		mosaicLevel = findViewById( R.id.sb_mosaic_level );
 		selectedImage = findViewById( R.id.iv_selected_img );
 		previewImage = findViewById( R.id.iv_preview );
+		gestureDetector = new ScaleGestureDetector( this, new ScaleGestureDetector.OnScaleGestureListener() {
+			@Override
+			public boolean onScale( @NonNull ScaleGestureDetector detector )
+			{
+				return true;
+			}
+
+			@Override
+			public boolean onScaleBegin( @NonNull ScaleGestureDetector detector )
+			{
+				return true;
+			}
+
+			@Override
+			public void onScaleEnd( @NonNull ScaleGestureDetector detector ) {}
+		} );
 
 		showMosaicLevel();
 
@@ -138,15 +159,16 @@ public class MainActivity extends AppCompatActivity
 				imageUri = uri;
 				selectedImage.setImageURI( imageUri );
 				setTouchArea( 0, 0 );
+				Log.d( "AppDebug", String.format( "imgSize = ( %d, %d )", selectedImage.getWidth(), selectedImage.getWidth() ) );
 			}
 			else {
 				// 画像が選択されなければアプリを終了させる
 				new AlertDialog
-					.Builder( this )
-					.setTitle( "お知らせ" )
-					.setMessage( "画像が選択されなかったので終了します。" )
-					.setPositiveButton( "はい", ( dialog, which ) -> finish()
-				).show();
+						    .Builder( this )
+						.setTitle( "お知らせ" )
+						.setMessage( "画像が選択されなかったので終了します。" )
+						.setPositiveButton( "はい", ( dialog, which ) -> finish()
+						).show();
 			}
 		} );
 
@@ -164,6 +186,10 @@ public class MainActivity extends AppCompatActivity
 
 			int x = ( int ) event.getX();
 			int y = ( int ) event.getY();
+			var size = getDisplaySize( this );
+
+			x = Math.max( 0, Math.min( x, size.x ) );
+			y = Math.max( 0, Math.min( y, size.y ) );
 
 			Log.d( "AppDebug", String.format( "( x, y )=( %d, %d )", x, y ) );
 
@@ -197,8 +223,22 @@ public class MainActivity extends AppCompatActivity
 
 	private void setTouchArea( int x, int y )
 	{
+		var size = getDisplaySize( this );
+
+		x = Math.max( 0, Math.min( x, size.x ) );
+		y = Math.max( 0, Math.min( y, size.y ) );
+
 		previewImage.setImageBitmap(
 				Bitmap.createBitmap( ( ( BitmapDrawable ) selectedImage.getDrawable() ).getBitmap(), x, y, CROP_SIZE, CROP_SIZE )
 		);
+	}
+
+	public Point getDisplaySize( Activity activity )
+	{
+		var windowMetrics = activity.getWindowManager().getCurrentWindowMetrics();
+		var h = windowMetrics.getBounds().height();
+		var w = windowMetrics.getBounds().width();
+
+		return new Point( w, h );
 	}
 }
