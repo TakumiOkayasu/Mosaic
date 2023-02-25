@@ -1,6 +1,8 @@
 package com.example.mosaic;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
@@ -133,7 +135,7 @@ public class MainActivity extends AppCompatActivity
 		} );
 
 		// 画像を暗黙的インテントで開き、選択した画像を読み込む
-		ActivityResultLauncher< PickVisualMediaRequest > pickMedia = registerForActivityResult( new ActivityResultContracts.PickVisualMedia(), uri ->
+		var pickMedia = registerForActivityResult( new ActivityResultContracts.PickVisualMedia(), uri ->
 		{
 			// 選択された後の処理
 			if( uri != null ) {
@@ -142,6 +144,15 @@ public class MainActivity extends AppCompatActivity
 				previewImage.setImageBitmap(
 						Bitmap.createBitmap( ( ( BitmapDrawable ) ( selectedImage.getDrawable() ) ).getBitmap(), 0, 0, CROP_SIZE, CROP_SIZE )
 				);
+			}
+			else {
+				// 画像が選択されなければアプリを終了させる
+				new AlertDialog
+					.Builder( this )
+					.setTitle( "お知らせ" )
+					.setMessage( "画像が選択されなかったので終了します。" )
+					.setPositiveButton( "はい", ( dialog, which ) -> finish()
+				).show();
 			}
 		} );
 
