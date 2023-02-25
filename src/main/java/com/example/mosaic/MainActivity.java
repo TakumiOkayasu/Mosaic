@@ -8,7 +8,6 @@ import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.ScaleGestureDetector;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -16,8 +15,9 @@ import android.widget.Toast;
 
 import androidx.activity.result.PickVisualMediaRequest;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.ortiz.touchview.TouchImageView;
 
 import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.LoaderCallbackInterface;
@@ -45,9 +45,8 @@ public class MainActivity extends AppCompatActivity
 	private TextView mosaicLevelText;
 	private SeekBar mosaicLevel;
 	private Uri imageUri;
-	private ImageView selectedImage;
+	private TouchImageView selectedImage;
 	private ImageView previewImage;
-	private ScaleGestureDetector gestureDetector;
 
 	/**
 	 * ROIを指定してモザイク処理
@@ -115,24 +114,8 @@ public class MainActivity extends AppCompatActivity
 
 		mosaicLevelText = findViewById( R.id.tv_mosaic_level );
 		mosaicLevel = findViewById( R.id.sb_mosaic_level );
-		selectedImage = findViewById( R.id.iv_selected_img );
+		selectedImage = findViewById( R.id.tiv_selected_img );
 		previewImage = findViewById( R.id.iv_preview );
-		gestureDetector = new ScaleGestureDetector( this, new ScaleGestureDetector.OnScaleGestureListener() {
-			@Override
-			public boolean onScale( @NonNull ScaleGestureDetector detector )
-			{
-				return true;
-			}
-
-			@Override
-			public boolean onScaleBegin( @NonNull ScaleGestureDetector detector )
-			{
-				return true;
-			}
-
-			@Override
-			public void onScaleEnd( @NonNull ScaleGestureDetector detector ) {}
-		} );
 
 		showMosaicLevel();
 
@@ -179,7 +162,7 @@ public class MainActivity extends AppCompatActivity
 		pickMedia.launch( new PickVisualMediaRequest.Builder().setMediaType( type ).build() );
 
 		// 画像内のタッチイベント
-		findViewById( R.id.iv_selected_img ).setOnTouchListener( ( v, event ) ->
+		findViewById( R.id.tiv_selected_img ).setOnTouchListener( ( v, event ) ->
 		{
 			// 呼ばないとアノテーションつけろってうるさい
 			v.performClick();

@@ -2,9 +2,28 @@ plugins {
     id 'com.android.application'
 }
 
+dependencies {
+    constraints {
+        implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.8.0") {
+            because("kotlin-stdlib-jdk7 is now a part of kotlin-stdlib")
+        }
+        implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.8.0") {
+            because("kotlin-stdlib-jdk8 is now a part of kotlin-stdlib")
+        }
+    }
+}
+
 android {
     namespace 'com.example.mosaic'
     compileSdk 33
+
+    buildFeatures {
+        compose true
+    }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion "1.4.2"
+    }
 
     defaultConfig {
         applicationId "com.example.mosaic"
@@ -22,6 +41,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_11
         targetCompatibility JavaVersion.VERSION_11
@@ -39,4 +59,6 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
     // image picker
     implementation 'androidx.activity:activity-ktx:1.6.1'
+    // TouchImageView
+    implementation 'com.github.MikeOrtiz:TouchImageView:3.3'
 }
