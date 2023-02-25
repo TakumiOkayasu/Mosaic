@@ -2,7 +2,6 @@ package com.example.mosaic;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
@@ -13,7 +12,6 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.PickVisualMediaRequest;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
@@ -105,7 +103,6 @@ public class MainActivity extends AppCompatActivity
 		return dstImage;
 	}
 
-	@SuppressLint( "ClickableViewAccessibility" )
 	@Override
 	protected void onCreate( Bundle savedInstanceState )
 	{
