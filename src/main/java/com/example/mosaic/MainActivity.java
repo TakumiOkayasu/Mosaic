@@ -142,11 +142,11 @@ public class MainActivity extends AppCompatActivity
 			else {
 				// 画像が選択されなければアプリを終了させる
 				new AlertDialog
-						    .Builder( this )
-						.setTitle( "お知らせ" )
-						.setMessage( "画像が選択されなかったので終了します。" )
-						.setPositiveButton( "はい", ( dialog, which ) -> finish()
-						).show();
+					.Builder( this )
+					.setTitle( "お知らせ" )
+					.setMessage( "画像が選択されなかったので終了します。" )
+					.setPositiveButton( "はい", ( dialog, which ) -> finish()
+				).show();
 			}
 		} );
 
