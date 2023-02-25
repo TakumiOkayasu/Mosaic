@@ -5,11 +5,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
-import android.media.Image;
 import android.util.AttributeSet;
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
 
 public class PreviewRect extends androidx.appcompat.widget.AppCompatImageView
 {
@@ -42,6 +38,4 @@ public class PreviewRect extends androidx.appcompat.widget.AppCompatImageView
 
 		canvas.drawRect( rect, paint );
 	}
-
-
 }
