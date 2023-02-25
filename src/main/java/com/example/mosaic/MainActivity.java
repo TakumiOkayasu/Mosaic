@@ -25,7 +25,6 @@ import org.opencv.core.Rect;
 
 public class MainActivity extends AppCompatActivity
 {
-	private static final int CROP_SIZE = 100;
 	private final BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback( this )
 	{
 		@Override
@@ -39,6 +38,7 @@ public class MainActivity extends AppCompatActivity
 			}
 		}
 	};
+	private static final int CROP_SIZE = 100;
 	private TextView mosaicLevelText;
 	private SeekBar mosaicLevel;
 	private Uri imageUri;
@@ -131,7 +131,7 @@ public class MainActivity extends AppCompatActivity
 			public void onStopTrackingTouch( SeekBar seekBar ) {}
 		} );
 
-		// 画像を暗黙的インテントで開き、選択した画像を読み込む
+		// Image Pickerで選択した画像を読み込む
 		var pickMedia = registerForActivityResult( new ActivityResultContracts.PickVisualMedia(), uri ->
 		{
 			// 選択された後の処理
@@ -153,9 +153,9 @@ public class MainActivity extends AppCompatActivity
 			}
 		} );
 
-		// TODO openCVの顔認識してORタッチした部分にモザイクをかける
+		// TODO openCVの顔認識して OR タッチした部分にモザイクをかける
 
-		// PhotoPickerを使う
+		// PhotoPickerを使う。ここに謎の型変換エラーが出るが、問題なく動く。
 		var type = ( ActivityResultContracts.PickVisualMedia.VisualMediaType ) ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE;
 		pickMedia.launch( new PickVisualMediaRequest.Builder().setMediaType( type ).build() );
 
