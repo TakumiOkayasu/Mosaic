@@ -8,7 +8,6 @@ import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -42,7 +41,7 @@ public class MainActivity extends AppCompatActivity
 	private SeekBar mosaicLevel;
 	private Uri imageUri;
 	private TouchImageView selectedImage;
-	private ImageView previewImage;
+	private PreviewRect previewImage;
 
 	@Override
 	protected void onCreate( Bundle savedInstanceState )
