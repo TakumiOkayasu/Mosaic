@@ -87,8 +87,8 @@ public class MainActivity extends AppCompatActivity
 
 			// TODO 画面サイズー＞画像サイズに対応するメソッドを作成する
 			// 範囲外に出ないように調整
-			int x = Math.max( 0, Math.min( ( int ) event.getX(), size.x ) );
-			int y = Math.max( 0, Math.min( ( int ) event.getY(), size.y ) );
+			int x = Utility.clamp( 0, ( int ) event.getX(), size.x );
+			int y = Utility.clamp( 0, ( int ) event.getY(), size.y );
 
 			setPreview( x, y );
 
