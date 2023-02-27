@@ -165,12 +165,10 @@ public class MainActivity extends AppCompatActivity
 	private void setPreview( int x, int y )
 	{
 		this.point.set( x, y );
-		final var HALF_CROP_SIZE = PreviewRect.CROP_SIZE / 2;
-		var center = new Rect( x - HALF_CROP_SIZE, y - HALF_CROP_SIZE, x + HALF_CROP_SIZE, y + HALF_CROP_SIZE );
 
 		// プレビュー画面に画像をセット
 		previewImage.setImageBitmap(
-				Bitmap.createBitmap( ( ( BitmapDrawable ) selectedImage.getDrawable() ).getBitmap(), center.top, center.left, center.bottom, center.right )
+				Bitmap.createBitmap( ( ( BitmapDrawable ) selectedImage.getDrawable() ).getBitmap(), x, y, PreviewRect.CROP_SIZE, PreviewRect.CROP_SIZE )
 		);
 	}
 }
