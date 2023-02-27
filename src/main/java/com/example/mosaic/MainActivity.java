@@ -1,9 +1,11 @@
 package com.example.mosaic;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.graphics.Bitmap;
 import android.graphics.Point;
+import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -35,13 +37,15 @@ public class MainActivity extends AppCompatActivity
 			}
 		}
 	};
+	private final Point point = new Point();
 	private TextView mosaicLevelText;
 	private SeekBar mosaicLevel;
 	private Uri imageUri;
 	private CustomTouchImageView selectedImage;
 	private PreviewRect previewImage;
-	private Point point = new Point();
 
+	// アクセシビリティワーニングを黙らせる
+	@SuppressLint( "ClickableViewAccessibility" )
 	@Override
 	protected void onCreate( Bundle savedInstanceState )
 	{
@@ -76,12 +80,13 @@ public class MainActivity extends AppCompatActivity
 		selectedImage.setTouchPointLister( () -> this.point );
 
 		// 画像内タッチイベント
-		findViewById( R.id.tiv_selected_img ).setOnTouchListener( ( v, event ) ->
+		selectedImage.setOnTouchListener( ( v, event ) ->
 		{
 			v.performClick();
 			var size = getDisplaySize( this );
 
 			// TODO 画面サイズー＞画像サイズに対応するメソッドを作成する
+			// 範囲外に出ないように調整
 			int x = Math.max( 0, Math.min( ( int ) event.getX(), size.x ) );
 			int y = Math.max( 0, Math.min( ( int ) event.getY(), size.y ) );
 
@@ -120,7 +125,7 @@ public class MainActivity extends AppCompatActivity
 
 		// TODO openCVの顔認識して OR タッチした部分にモザイクをかける
 
-		// PhotoPickerを使う。ここに謎の型変換エラーが出るが、問題なく動く。
+		// PhotoPickerを使う。ここに謎の型変換エラーメッセージが出るが、問題なく動く。
 		var type = ( ActivityResultContracts.PickVisualMedia.VisualMediaType ) ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE;
 		pickMedia.launch( new PickVisualMediaRequest.Builder().setMediaType( type ).build() );
 
@@ -159,14 +164,13 @@ public class MainActivity extends AppCompatActivity
 
 	private void setPreview( int x, int y )
 	{
-		var display = getDisplaySize( this );           // ディスプレイサイズ
-		var image = selectedImage.getDrawable().getBounds();    // 画像サイズ
-
 		this.point.set( x, y );
+		final var HALF_CROP_SIZE = PreviewRect.CROP_SIZE / 2;
+		var center = new Rect( x - HALF_CROP_SIZE, y - HALF_CROP_SIZE, x + HALF_CROP_SIZE, y + HALF_CROP_SIZE );
 
 		// プレビュー画面に画像をセット
 		previewImage.setImageBitmap(
-				Bitmap.createBitmap( ( ( BitmapDrawable ) selectedImage.getDrawable() ).getBitmap(), x, y, PreviewRect.CROP_SIZE, PreviewRect.CROP_SIZE )
+				Bitmap.createBitmap( ( ( BitmapDrawable ) selectedImage.getDrawable() ).getBitmap(), center.top, center.left, center.bottom, center.right )
 		);
 	}
 }
