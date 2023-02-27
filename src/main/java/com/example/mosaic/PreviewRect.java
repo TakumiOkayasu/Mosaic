@@ -11,7 +11,8 @@ import androidx.appcompat.widget.AppCompatImageView;
 
 public class PreviewRect extends AppCompatImageView
 {
-	private static final float STROKE_WIDTH = 10.f;
+	public static final float STROKE_WIDTH = 10.f;
+	public static final int CROP_SIZE = 500;
 	public PreviewRect( Context context )
 	{
 		super( context );

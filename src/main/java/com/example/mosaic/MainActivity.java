@@ -159,15 +159,14 @@ public class MainActivity extends AppCompatActivity
 
 	private void setPreview( int x, int y )
 	{
-		final var CROP_SIZE = 500;  // 切り抜きサイズ
 		var display = getDisplaySize( this );           // ディスプレイサイズ
 		var image = selectedImage.getDrawable().getBounds();    // 画像サイズ
+
 		this.point.set( x, y );
-		Log.d( "AppDebug", String.format( "( x, y ) = ( %d, %d )", point.x, point.y ) );
 
 		// プレビュー画面に画像をセット
 		previewImage.setImageBitmap(
-				Bitmap.createBitmap( ( ( BitmapDrawable ) selectedImage.getDrawable() ).getBitmap(), x, y, CROP_SIZE, CROP_SIZE )
+				Bitmap.createBitmap( ( ( BitmapDrawable ) selectedImage.getDrawable() ).getBitmap(), x, y, PreviewRect.CROP_SIZE, PreviewRect.CROP_SIZE )
 		);
 	}
 }
