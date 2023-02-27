@@ -16,8 +16,6 @@ import androidx.activity.result.PickVisualMediaRequest;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.ortiz.touchview.TouchImageView;
-
 import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.LoaderCallbackInterface;
 import org.opencv.android.OpenCVLoader;
@@ -40,8 +38,9 @@ public class MainActivity extends AppCompatActivity
 	private TextView mosaicLevelText;
 	private SeekBar mosaicLevel;
 	private Uri imageUri;
-	private TouchImageView selectedImage;
+	private CustomTouchImageView selectedImage;
 	private PreviewRect previewImage;
+	private Point point = new Point();
 
 	@Override
 	protected void onCreate( Bundle savedInstanceState )
@@ -54,8 +53,10 @@ public class MainActivity extends AppCompatActivity
 		selectedImage = findViewById( R.id.tiv_selected_img );
 		previewImage = findViewById( R.id.pr_preview );
 
+		// 最初の一回はTextViewが表示されないので呼んであげる
 		showMosaicLevel();
 
+		// モザイクの大きさを変更する
 		mosaicLevel.setOnSeekBarChangeListener( new SeekBar.OnSeekBarChangeListener()
 		{
 			@Override
@@ -71,6 +72,24 @@ public class MainActivity extends AppCompatActivity
 			public void onStopTrackingTouch( SeekBar seekBar ) {}
 		} );
 
+		// タッチされた場所を通知するTouchImageViewの拡張クラスにあるインターフェース
+		selectedImage.setTouchPointLister( () -> this.point );
+
+		// 画像内タッチイベント
+		findViewById( R.id.tiv_selected_img ).setOnTouchListener( ( v, event ) ->
+		{
+			v.performClick();
+			var size = getDisplaySize( this );
+
+			// TODO 画面サイズー＞画像サイズに対応するメソッドを作成する
+			int x = Math.max( 0, Math.min( ( int ) event.getX(), size.x ) );
+			int y = Math.max( 0, Math.min( ( int ) event.getY(), size.y ) );
+
+			setPreview( x, y );
+
+			return true;
+		} );
+
 		// PhotoPickerで選択した画像を読み込む
 		var pickMedia = registerForActivityResult( new ActivityResultContracts.PickVisualMedia(), uri ->
 		{
@@ -79,12 +98,19 @@ public class MainActivity extends AppCompatActivity
 				imageUri = uri;
 				selectedImage.setImageURI( imageUri );
 				setPreview( 0, 0 );
-				Log.d( "AppDebug", String.format( "imgSize = ( %d, %d )", selectedImage.getWidth(), selectedImage.getWidth() ) );
+
+				// Debug
+				{
+					var d = ( ( BitmapDrawable ) selectedImage.getDrawable() ).getBitmap();
+					Log.d( "AppDebug", String.format( "Image   ( h, w ) = ( %d, %d )", d.getHeight(), d.getWidth() ) );
+					var dsp = getDisplaySize( this );
+					Log.d( "AppDebug", String.format( "Display ( x, y ) = ( %d, %d )", dsp.x, dsp.y ) );
+				}
 			}
 			else {
 				// 画像が選択されなければアプリを終了させる
 				new AlertDialog
-						    .Builder( this )
+						.Builder( this )
 						.setTitle( "お知らせ" )
 						.setMessage( "画像が選択されなかったので終了します。" )
 						.setPositiveButton( "はい", ( dialog, which ) -> finish() )
@@ -97,24 +123,6 @@ public class MainActivity extends AppCompatActivity
 		// PhotoPickerを使う。ここに謎の型変換エラーが出るが、問題なく動く。
 		var type = ( ActivityResultContracts.PickVisualMedia.VisualMediaType ) ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE;
 		pickMedia.launch( new PickVisualMediaRequest.Builder().setMediaType( type ).build() );
-
-		// 画像内のタッチイベント
-		findViewById( R.id.tiv_selected_img ).setOnTouchListener( ( v, event ) ->
-		{
-			// 呼ばないとアノテーションつけろってうるさい
-			v.performClick();
-
-			var size = getDisplaySize( this );
-
-			// TODO 画面サイズー＞画像サイズに対応するメソッドを作成する
-			int x = Math.max( 0, Math.min( ( int ) event.getX(), size.x ) );
-			int y = Math.max( 0, Math.min( ( int ) event.getY(), size.y ) );
-
-			Log.i( "AppDebug", String.format( "( x, y ) = ( %d, %d )", x, y ) );
-
-			setPreview( x, y );
-			return true;
-		} );
 
 		Toast.makeText( this, "画像を選択してください。", Toast.LENGTH_SHORT ).show();
 	}
@@ -140,19 +148,6 @@ public class MainActivity extends AppCompatActivity
 		mosaicLevelText.setText( String.format( "%s×%s", v, v ) );
 	}
 
-	private void setPreview( int x, int y )
-	{
-		var size = getDisplaySize( this );
-
-		x = Math.max( 0, Math.min( x + 100, size.x ) );
-		y = Math.max( 0, Math.min( y - 100, size.y ) );
-		final int CROP_SIZE = 500;
-
-		previewImage.setImageBitmap(
-				Bitmap.createBitmap( ( ( BitmapDrawable ) selectedImage.getDrawable() ).getBitmap(), x, y, CROP_SIZE, CROP_SIZE )
-		);
-	}
-
 	private Point getDisplaySize( Activity activity )
 	{
 		var windowMetrics = activity.getWindowManager().getCurrentWindowMetrics();
@@ -162,4 +157,17 @@ public class MainActivity extends AppCompatActivity
 		return new Point( w, h );
 	}
 
+	private void setPreview( int x, int y )
+	{
+		final var CROP_SIZE = 500;  // 切り抜きサイズ
+		var display = getDisplaySize( this );           // ディスプレイサイズ
+		var image = selectedImage.getDrawable().getBounds();    // 画像サイズ
+		this.point.set( x, y );
+		Log.d( "AppDebug", String.format( "( x, y ) = ( %d, %d )", point.x, point.y ) );
+
+		// プレビュー画面に画像をセット
+		previewImage.setImageBitmap(
+				Bitmap.createBitmap( ( ( BitmapDrawable ) selectedImage.getDrawable() ).getBitmap(), x, y, CROP_SIZE, CROP_SIZE )
+		);
+	}
 }

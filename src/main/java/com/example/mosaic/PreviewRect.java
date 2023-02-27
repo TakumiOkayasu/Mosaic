@@ -7,12 +7,11 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.util.AttributeSet;
 
-public class PreviewRect extends androidx.appcompat.widget.AppCompatImageView
-{
-	private static final float STROKE_WIDTH = 20.f;
-	private final Rect rect = new Rect( 10, 10, 251, 251 );
-	private final Paint paint = new Paint();
+import androidx.appcompat.widget.AppCompatImageView;
 
+public class PreviewRect extends AppCompatImageView
+{
+	private static final float STROKE_WIDTH = 10.f;
 	public PreviewRect( Context context )
 	{
 		super( context );
@@ -32,6 +31,15 @@ public class PreviewRect extends androidx.appcompat.widget.AppCompatImageView
 	protected void onDraw( Canvas canvas )
 	{
 		super.onDraw( canvas );
+
+		drawPreviewRect( canvas );
+	}
+
+	private void drawPreviewRect( Canvas canvas )
+	{
+		var rect = new Rect( 5, 5, 250, 250 );
+		var paint = new Paint();
+
 		paint.setColor( Color.RED );
 		paint.setStrokeWidth( STROKE_WIDTH );
 		paint.setStyle( Paint.Style.STROKE );

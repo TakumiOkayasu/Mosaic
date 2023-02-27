@@ -2,7 +2,6 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/layout_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
@@ -11,11 +10,14 @@
         android:id="@+id/sb_mosaic_level"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="42dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="52dp"
         android:max="20"
         android:min="0"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
@@ -28,29 +30,37 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/sb_mosaic_level" />
 
-    <com.ortiz.touchview.TouchImageView
+    <com.example.mosaic.CustomTouchImageView
         android:id="@+id/tiv_selected_img"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="32dp"
+        android:adjustViewBounds="true"
+        android:scaleType="fitCenter"
         app:layout_constraintBottom_toTopOf="@+id/sb_mosaic_level"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_preview" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_preview"
+        tools:ignore="MissingConstraints,contentDescription" />
 
     <com.example.mosaic.PreviewRect
         android:id="@+id/pr_preview"
         android:layout_width="100dp"
         android:layout_height="100dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/tv_preview"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:keyboardNavigationCluster="true"
-        android:text="加工前"
+        android:text="指先"
         app:layout_constraintEnd_toEndOf="@+id/pr_preview"
+        app:layout_constraintStart_toEndOf="@+id/pr_preview"
         app:layout_constraintStart_toStartOf="@+id/pr_preview"
         app:layout_constraintTop_toBottomOf="@+id/pr_preview"
         tools:ignore="HardcodedText,MissingConstraints" />
