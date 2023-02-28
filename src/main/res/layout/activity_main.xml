@@ -51,7 +51,7 @@
         app:layout_constraintTop_toBottomOf="@+id/pr_preview"
         tools:ignore="HardcodedText,MissingConstraints" />
 
-    <com.example.mosaic.CustomTouchImageView
+    <com.ortiz.touchview.TouchImageView
         android:id="@+id/tiv_selected_img"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -60,8 +60,10 @@
         android:scaleType="fitCenter"
         app:layout_constraintBottom_toTopOf="@+id/sb_mosaic_level"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_preview"
+        app:layout_constraintVertical_bias="0.0"
         tools:ignore="MissingConstraints,contentDescription" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
