@@ -51,11 +51,10 @@
         app:layout_constraintTop_toBottomOf="@+id/pr_preview"
         tools:ignore="HardcodedText,MissingConstraints" />
 
-    <com.ortiz.touchview.TouchImageView
-        android:id="@+id/tiv_selected_img"
+    <ImageView
+        android:id="@+id/iv_selected_img"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginBottom="32dp"
         android:adjustViewBounds="true"
         android:scaleType="fitCenter"
         app:layout_constraintBottom_toTopOf="@+id/sb_mosaic_level"
@@ -63,7 +62,22 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_preview"
-        app:layout_constraintVertical_bias="0.0"
         tools:ignore="MissingConstraints,contentDescription" />
+
+    <Switch
+        android:id="@+id/sw_mosaic"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="64dp"
+        android:layout_marginEnd="32dp"
+        android:gravity="center|start"
+        android:minWidth="48dp"
+        android:minHeight="48dp"
+        android:text="みるだけモード"
+        app:layout_constraintBottom_toTopOf="@+id/iv_selected_img"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/pr_preview"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="UseSwitchCompatOrMaterialXml" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
