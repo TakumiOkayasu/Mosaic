@@ -9,6 +9,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.Switch;
@@ -44,6 +45,7 @@ public class MainActivity extends AppCompatActivity
 	private Uri imageUri;
 	private ImageView selectedImage;
 	private PreviewRect previewImage;
+	private Button redoButton;
 	@SuppressLint( "UseSwitchCompatOrMaterialCode" )
 	private Switch mosaicMode;
 
@@ -60,17 +62,20 @@ public class MainActivity extends AppCompatActivity
 		selectedImage = findViewById( R.id.iv_selected_img );
 		previewImage = findViewById( R.id.pr_preview );
 		mosaicMode = findViewById( R.id.sw_mosaic );
+		redoButton = findViewById( R.id.btn_redo );
 
-		mosaicMode.setOnClickListener( v ->
-				mosaicMode.setText( mosaicMode.isChecked() ? "モザイクかけるモード" : "みるだけモード" )
-		);
+		mosaicMode.setOnClickListener( v -> mosaicMode.setText( mosaicMode.isChecked() ? "モザイクかけるモード" : "みるだけモード" ) );
 
 		mosaicMode.setOnCheckedChangeListener( ( buttonView, isChecked ) -> {
 			if( isChecked ) {
 				// ここにモザイクをかける処理を書く
+
 				Log.d( LOG_TAG, "Switch Changed!" );
 			}
 		} );
+
+		// redoをする処理を書く
+		redoButton.setOnClickListener( v -> {} );
 
 		// 最初の一回はTextViewが表示されないので呼んであげる
 		showMosaicLevel();
@@ -92,7 +97,7 @@ public class MainActivity extends AppCompatActivity
 		} );
 
 
-		// 画像内タッチイベント
+		// 画像内タッチ
 		selectedImage.setOnTouchListener( ( v, event ) ->
 		{
 			v.performClick();
@@ -100,17 +105,20 @@ public class MainActivity extends AppCompatActivity
 			var imgSize = selectedImage.getDrawable().getBounds();
 
 			Log.d( LOG_TAG, String.format( "ImgRect[%d, %d][%d, %d]", imgSize.top, imgSize.left, imgSize.bottom, imgSize.right ) );
+			Log.d( LOG_TAG, String.format( "w, h[%d, %d]", selectedImage.getWidth(), selectedImage.getHeight() ) );
 
-			int tx = ( int ) ( event.getX() * Math.max( ( float ) imgSize.right / displaySize.x, 1.f ) ) - 130;
+			// 画面上→画像上の座標に変換
+			int tx = ( int ) ( event.getX() * Math.max( ( float ) imgSize.right / displaySize.x, 1.f ) );
 			int ty = ( int ) ( event.getY() * Math.max( ( float ) imgSize.bottom / displaySize.y, 1.f ) );
 
 			Log.d( LOG_TAG, String.format( "tx, ty[%d, %d]", tx, ty ) );
 
-			// 画像外に出ないように調整
-			int x = Utility.clamp( 0, tx, imgSize.width() - PreviewRect.CROP_SIZE - 1 ) + 50;
-			int y = Utility.clamp( 0, ty, imgSize.height() - PreviewRect.CROP_SIZE - 1 ) + 300;
 
-			// setPreview( x, y );
+			// 画像外に出ないように調整
+			int x = Utility.clamp( 0, tx, imgSize.width() - PreviewRect.CROP_SIZE );
+			int y = Utility.clamp( 0, ty, imgSize.height() - PreviewRect.CROP_SIZE );
+
+			setPreview( new Point( x, y ) );
 
 			return true;
 		} );
@@ -122,7 +130,7 @@ public class MainActivity extends AppCompatActivity
 			if( uri != null ) {
 				imageUri = uri;
 				selectedImage.setImageURI( imageUri );
-				//setPreview( 0, 0 );
+				setPreview( new Point( 0, 0 ) );
 			}
 			else {
 				// 画像が選択されなければアプリを終了させる
@@ -175,11 +183,11 @@ public class MainActivity extends AppCompatActivity
 	}
 
 	// 中心座標をもらい、描画する
-	private void setPreview( Point center )
+	private void setPreview( Point leftTop )
 	{
 		// プレビュー画面に画像をセット
 		previewImage.setImageBitmap(
-				Bitmap.createBitmap( ( ( BitmapDrawable ) selectedImage.getDrawable() ).getBitmap(), center.x, center.y, PreviewRect.CROP_SIZE, PreviewRect.CROP_SIZE )
+				Bitmap.createBitmap( ( ( BitmapDrawable ) selectedImage.getDrawable() ).getBitmap(), leftTop.x, leftTop.y, PreviewRect.CROP_SIZE, PreviewRect.CROP_SIZE )
 		);
 	}
 }

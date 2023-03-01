@@ -77,7 +77,17 @@
         app:layout_constraintBottom_toTopOf="@+id/iv_selected_img"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/pr_preview"
+        tools:ignore="HardcodedText,UseSwitchCompatOrMaterialXml,VisualLintButtonSize" />
+
+    <Button
+        android:id="@+id/btn_redo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="ReDo"
+        app:layout_constraintBottom_toTopOf="@+id/sw_mosaic"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/pr_preview"
         app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="UseSwitchCompatOrMaterialXml" />
+        tools:ignore="HardcodedText" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
