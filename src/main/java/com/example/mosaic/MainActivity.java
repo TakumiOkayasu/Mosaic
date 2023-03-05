@@ -57,23 +57,10 @@ public class MainActivity extends AppCompatActivity
 		undoButton.setOnClickListener( new MosaicUnDo() );
 
 		// モザイクの大きさを変更するシークバー登録
-		var mosaicSeekBar = new MosaicLevelSeekbar( findViewById( R.id.tv_mosaic_level ) );
-		mosaicLevel.setOnSeekBarChangeListener( mosaicSeekBar );
+		mosaicLevel.setOnSeekBarChangeListener( new MosaicLevelSeekbar( findViewById( R.id.tv_mosaic_level ) ) );
 
 		// 画像内タッチ
-		selectedImage.setOnTouchListener( ( v, event ) ->
-		{
-			v.performClick();
-			final var max_x = selectedImage.getWidth();
-			final var max_y = selectedImage.getHeight();
-
-			// 画面範囲ではみ出し調整
-			var tx = Utility.clamp( 0, ( int ) event.getX(), max_x );
-			var ty = Utility.clamp( 0, ( int ) event.getY(), max_y );
-
-			Log.d( LOG_TAG, String.format( "touch( %d, %d )", tx, ty ) );
-			return true;
-		} );
+		selectedImage.setOnTouchListener( new MosaicImageTouch( selectedImage ) );
 
 		// PhotoPickerで選択した画像を読み込む
 		var pickMedia = registerForActivityResult(

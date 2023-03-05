@@ -43,13 +43,15 @@
 
     <ImageView
         android:id="@+id/iv_selected_img"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
         android:adjustViewBounds="true"
+        android:maxWidth="998px"
+        android:maxHeight="1496px"
         android:scaleType="centerInside"
         app:layout_constraintBottom_toTopOf="@+id/sb_mosaic_level"
         app:layout_constraintEnd_toEndOf="parent"

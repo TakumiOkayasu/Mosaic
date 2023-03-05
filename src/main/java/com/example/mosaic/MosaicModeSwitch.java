@@ -9,6 +9,7 @@ public class MosaicModeSwitch implements CompoundButton.OnCheckedChangeListener
 	private String switchText;
 	private Switch mode;
 
+	// ここはインターフェース経由でもらうようにあとで直す
 	public MosaicModeSwitch( @SuppressLint( "UseSwitchCompatOrMaterialCode" ) Switch mode )
 	{
 		this.mode = mode;
