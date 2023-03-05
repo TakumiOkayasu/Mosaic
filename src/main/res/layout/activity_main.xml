@@ -6,20 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <SeekBar
-        android:id="@+id/sb_mosaic_level"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginEnd="32dp"
-        android:layout_marginBottom="52dp"
-        android:max="20"
-        android:min="0"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent" />
-
     <TextView
         android:id="@+id/tv_mosaic_level"
         android:layout_width="wrap_content"
@@ -30,64 +16,59 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/sb_mosaic_level" />
 
-    <com.example.mosaic.PreviewRect
-        android:id="@+id/pr_preview"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/tv_preview"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:keyboardNavigationCluster="true"
-        android:text="指先"
-        app:layout_constraintEnd_toEndOf="@+id/pr_preview"
-        app:layout_constraintStart_toEndOf="@+id/pr_preview"
-        app:layout_constraintStart_toStartOf="@+id/pr_preview"
-        app:layout_constraintTop_toBottomOf="@+id/pr_preview"
-        tools:ignore="HardcodedText,MissingConstraints" />
-
-    <ImageView
-        android:id="@+id/iv_selected_img"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:adjustViewBounds="true"
-        android:scaleType="fitCenter"
-        app:layout_constraintBottom_toTopOf="@+id/sb_mosaic_level"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_preview"
-        tools:ignore="MissingConstraints,contentDescription" />
-
     <Switch
         android:id="@+id/sw_mosaic"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="64dp"
-        android:layout_marginEnd="32dp"
+        android:layout_marginEnd="64dp"
         android:gravity="center|start"
         android:minWidth="48dp"
         android:minHeight="48dp"
         android:text="みるだけモード"
-        app:layout_constraintBottom_toTopOf="@+id/iv_selected_img"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/pr_preview"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_undo"
         tools:ignore="HardcodedText,UseSwitchCompatOrMaterialXml,VisualLintButtonSize" />
 
     <Button
-        android:id="@+id/btn_redo"
+        android:id="@+id/btn_undo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="ReDo"
-        app:layout_constraintBottom_toTopOf="@+id/sw_mosaic"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/pr_preview"
+        app:layout_constraintEnd_toEndOf="@+id/sw_mosaic"
+        app:layout_constraintStart_toStartOf="@+id/sw_mosaic"
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="HardcodedText" />
+
+    <ImageView
+        android:id="@+id/iv_selected_img"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:adjustViewBounds="true"
+        android:scaleType="centerInside"
+        app:layout_constraintBottom_toTopOf="@+id/sb_mosaic_level"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/sw_mosaic"
+        tools:ignore="MissingConstraints,contentDescription" />
+
+    <SeekBar
+        android:id="@+id/sb_mosaic_level"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="52dp"
+        android:max="100"
+        android:min="0"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -11,4 +11,8 @@ public class Utility
 	{
 		return Math.max( min, Math.min( value, max ) );
 	}
+	public static float clamp( float min, float value, float max )
+	{
+		return Math.max( min, Math.min( value, max ) );
+	}
 }
